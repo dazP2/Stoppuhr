@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stoppuhr</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .time {
+      font-size: 7rem;
+      user-select: none;
+    }
+
+    .controls {
+      margin-top: 2rem;
+    }
+
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.5rem;   
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="time" id="display">00:00</div>
+  <div class="controls">
+    <button id="toggle">Start</button>
+  </div>
+
+  <script>
+    let running = false;
+    let elapsed = 0;
+    let interval;
+    const display = document.getElementById('display');
+    const button = document.getElementById('toggle');
+
+    // Lade gespeicherte Zeit
+    if (localStorage.getItem('elapsed')) {
+      elapsed = parseInt(localStorage.getItem('elapsed'));
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+        const totalSeconds = Math.floor(elapsed / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        const displayHours = String(hours).padStart(2, '0');
+        const displayMinutes = String(minutes).padStart(2, '0');
+        const displaySeconds = String(seconds).padStart(2, '0');
+
+        display.textContent = `${displayHours}:${displayMinutes}:${displaySeconds}`;
+
+    }
+
+    function start() {
+      const startTime = Date.now() - elapsed;
+      interval = setInterval(() => {
+        elapsed = Date.now() - startTime;
+        localStorage.setItem('elapsed', elapsed);
+        updateDisplay();
+      }, 1000);
+    }
+
+    function stop() {
+      clearInterval(interval);
+    }
+
+    button.addEventListener('click', () => {
+      if (running) {
+        stop();
+        button.textContent = 'Start';
+      } else {
+        start();
+        button.textContent = 'Pause';
+      }
+      running = !running;
+    });
+
+    updateDisplay();
+  </script>
+</body>
+</html>
