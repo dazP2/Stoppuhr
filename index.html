@@ -47,6 +47,7 @@
   <div class="time" id="display">00:00</div>
   <div class="controls">
     <button id="toggle">Start</button>
+    <button id="reset">Refresh</button>
   </div>
 
   <script>
@@ -101,6 +102,17 @@
     });
 
     updateDisplay();
+
+    const resetButton = document.getElementById('reset');
+
+    resetButton.addEvenListener('click', () => {
+      stop(); //Timer anhalten, falls aktiv
+      elapsed = 0;
+      localStorage.removeItem('elapsed');
+      updateDisplay();
+      button.textContent = 'Start';
+      running = false;
+    });
   </script>
 </body>
 </html>
