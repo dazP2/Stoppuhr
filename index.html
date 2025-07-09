@@ -106,7 +106,7 @@
 
     updateDisplay();
 
-    resetButton.addEvenListener('click', () => {
+    resetButton.addEventListener('click', () => {
       stop(); //Timer anhalten, falls aktiv
       elapsed = 0;
       localStorage.removeItem('elapsed');
